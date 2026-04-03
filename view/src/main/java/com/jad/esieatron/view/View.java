@@ -19,6 +19,7 @@ public class View implements IView {
         windowSettings.setScreenWidth(40);
         windowSettings.setListenKeyboard(true);
         windowSettings.addKeyboardListener(KeyEvent.VK_Q, "plop");
+        windowSettings.addKeyboardListener(KeyEvent.VK_D, "glop");
         this.window = new TextWindow(windowSettings);
     }
 
@@ -35,6 +36,7 @@ public class View implements IView {
     @Override
     public void display() {
         this.window.setVisible(true);
-        this.window.display(this.window.isOn("plop") ? "plop" : "Pas plop");
+        this.window.display((this.window.isOn("plop") ? "plop" : "Pas plop") + "\n" +
+                                    (this.window.isOn("glop") ? "glop" : "Pas glop"));
     }
 }
