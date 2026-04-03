@@ -20,6 +20,7 @@ public class View implements IView {
         windowSettings.setListenKeyboard(true);
         windowSettings.addKeyboardListener(KeyEvent.VK_Q, "plop");
         windowSettings.addKeyboardListener(KeyEvent.VK_D, "glop");
+        windowSettings.addKeyboardListener(KeyEvent.VK_S, "flop");
         this.window = new TextWindow(windowSettings);
     }
 
@@ -37,6 +38,7 @@ public class View implements IView {
     public void display() {
         this.window.setVisible(true);
         this.window.display((this.window.isOn("plop") ? "plop" : "Pas plop") + "\n" +
-                                    (this.window.isOn("glop") ? "glop" : "Pas glop"));
+                                    (this.window.isOn("glop") ? "glop" : "Pas glop") + "\n" +
+                                    (this.window.isOn("flop") ? "flop" : "Pas flop"));
     }
 }
