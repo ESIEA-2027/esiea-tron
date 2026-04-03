@@ -19,6 +19,8 @@ public class Controller implements IController {
 
     @Override
     public void proceed() {
-        this.view.display();
+        for (; ; ) {
+            this.view.display();
+        }
     }
 }
