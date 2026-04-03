@@ -12,8 +12,10 @@ public class View implements IView {
 
     public View() {
         TextWindowSettings windowSettings = new TextWindowSettings();
-        windowSettings.setFontSize(12f);
-        this.window = new TextWindow();
+        windowSettings.setTitle("Ma fenêtre à moi");
+        windowSettings.setScreenHeight(50);
+        windowSettings.setScreenWidth(200);
+        this.window = new TextWindow(windowSettings);
     }
 
     @Override
@@ -24,5 +26,11 @@ public class View implements IView {
     @Override
     public void setController(final IController controller) {
         this.controller = controller;
+    }
+
+    @Override
+    public void display() {
+        this.window.setVisible(true);
+        this.window.display("Plop");
     }
 }

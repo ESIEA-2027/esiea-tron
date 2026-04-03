@@ -17,5 +17,6 @@ public class Main {
         model.setView(view);
         view.setController(controller);
         view.setModel(model);
+        controller.proceed();
     }
 }
