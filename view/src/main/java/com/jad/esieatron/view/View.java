@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 
 public class View implements IView {
     private final TextWindow window;
+    private final KeyBindings keyBindings = new KeyBindings();
     private IModel model;
     private IController controller;
 
@@ -25,17 +26,17 @@ public class View implements IView {
     }
 
     @Override
-    public void setModel(final IModel model) {
+    public final void setModel(final IModel model) {
         this.model = model;
     }
 
     @Override
-    public void setController(final IController controller) {
+    public final void setController(final IController controller) {
         this.controller = controller;
     }
 
     @Override
-    public void display() {
+    public final void display() {
         this.window.setVisible(true);
         this.window.display((this.window.isOn("plop") ? "plop" : "Pas plop") + "\n" +
                                     (this.window.isOn("glop") ? "glop" : "Pas glop") + "\n" +

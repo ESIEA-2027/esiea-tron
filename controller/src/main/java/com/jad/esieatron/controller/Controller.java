@@ -1,5 +1,7 @@
 package com.jad.esieatron.controller;
 
+import com.jad.esieatron.domain.Order;
+import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.model.IModel;
 import com.jad.esieatron.view.IView;
 
@@ -8,19 +10,27 @@ public class Controller implements IController {
     private IView view;
 
     @Override
-    public void setView(final IView view) {
+    public final void setView(final IView view) {
         this.view = view;
     }
 
     @Override
-    public void setModel(final IModel model) {
+    public final void setModel(final IModel model) {
         this.model = model;
     }
 
     @Override
-    public void proceed() {
+    public final void proceed() {
         for (; ; ) {
             this.view.display();
+        }
+    }
+
+    @Override
+    public final void handleOrder(final Order order, final Player player) {
+        switch (order) {
+            case TURN_LEFT -> this.model.turnLeft(player);
+            case TURN_RIGHT -> this.model.turnRight(player);
         }
     }
 }
