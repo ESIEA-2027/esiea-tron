@@ -7,6 +7,8 @@ import com.jad.esieatron.view.IView;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class Model implements IModel {
@@ -14,27 +16,36 @@ public class Model implements IModel {
     private static final String GRID_WIDTH_KEY = "model.grid.width";
     private static final String GRID_HEIGHT_KEY = "model.grid.height";
     private static final String NUMBER_OF_LIGHT_CYCLES_KEY = "model.numberOfLightCycles";
-
+    private static final String MODEL_LIGHT_CYCLE = "model.lightCycle";
+    @SuppressWarnings({"FieldCanBeLocal", "MismatchedQueryAndUpdateOfCollection"})
+    private final List<Player> players;
     @SuppressWarnings("FieldCanBeLocal")
-    private final Grid grid;
-    private final LightCycles lightCycles;
+    private Grid grid;
+    private LightCycles lightCycles;
     private IView view;
 
     public Model() {
-        final ModelProperties modelProperties = Model.loadModelProperties();
-        this.grid = new Grid(modelProperties.gridDimension());
-        this.lightCycles = new LightCycles(modelProperties.gridDimension(), this.grid::placeSprite);
-        for (int i = 0; i < modelProperties.numberOfLightCycles(); i++) {
-            this.lightCycles.addPlayer(new Player(i, new Sprite('#')));
-        }
+        this.players = new ArrayList<>();
     }
 
-    private static ModelProperties loadModelProperties() {
+    @Override
+    public final void load() {
         final Properties properties = Model.loadProperties();
-        final int width = Integer.parseInt(properties.getProperty(Model.GRID_WIDTH_KEY));
-        final int height = Integer.parseInt(properties.getProperty(Model.GRID_HEIGHT_KEY));
-        final int numberOfLightCycles = Integer.parseInt(properties.getProperty(Model.NUMBER_OF_LIGHT_CYCLES_KEY));
-        return new ModelProperties(new Dimension(width, height), numberOfLightCycles);
+        final ModelProperties modelProperties = Model.loadModelProperties(properties);
+        this.grid = new Grid(modelProperties.gridDimension());
+        this.lightCycles = new LightCycles(modelProperties.gridDimension(), this.grid::placeSprite);
+
+        final int numberOfLightCycles = modelProperties.numberOfLightCycles();
+        for (int i = 0; i < numberOfLightCycles; i++) {
+            final String config = properties.getProperty(Model.MODEL_LIGHT_CYCLE + "." + i);
+            final String[] configParts = config.split(",");
+            final Sprite sprite = new Sprite(configParts[0].charAt(0));
+            final Point start = new Point(Integer.parseInt(configParts[1]), Integer.parseInt(configParts[2]));
+            final CardinalPoint startDirection = CardinalPoint.valueOf(configParts[3]);
+            final Player player = new Player(i, sprite);
+            this.players.add(player);
+            this.lightCycles.add(player, start, startDirection);
+        }
     }
 
     private static Properties loadProperties() {
@@ -47,8 +58,11 @@ public class Model implements IModel {
         return properties;
     }
 
-    public final void addPlayer(final Player player) {
-        this.lightCycles.addPlayer(player);
+    private static ModelProperties loadModelProperties(final Properties properties) {
+        final int width = Integer.parseInt(properties.getProperty(Model.GRID_WIDTH_KEY));
+        final int height = Integer.parseInt(properties.getProperty(Model.GRID_HEIGHT_KEY));
+        final int numberOfLightCycles = Integer.parseInt(properties.getProperty(Model.NUMBER_OF_LIGHT_CYCLES_KEY));
+        return new ModelProperties(new Dimension(width, height), numberOfLightCycles);
     }
 
     @Override

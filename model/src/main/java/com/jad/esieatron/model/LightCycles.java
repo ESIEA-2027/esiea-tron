@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
-public class LightCycles {
+class LightCycles {
     final Dimension gridSize;
     final BiConsumer<Point, Sprite> onCycleMoved;
     private final HashMap<Player, LightCycle> lightCycles;
@@ -38,20 +38,18 @@ public class LightCycles {
                          (point.y + this.gridSize.height) % this.gridSize.height);
     }
 
-    public void addPlayer(final Player player) {
-        if (this.has(player)) return;
-        final Point position = this.getRandomPosition();
-        final CardinalPoint direction = CardinalPoint.getRandom();
-        this.lightCycles.put(player, new LightCycle(player, position, direction));
-    }
-
-    public final boolean has(final Player player) {
-        return this.lightCycles.containsKey(player);
-    }
-
     public final Point getRandomPosition() {
         final int x = (int) (Math.random() * this.gridSize.width);
         final int y = (int) (Math.random() * this.gridSize.height);
         return new Point(x, y);
+    }
+
+    public void add(final Player player, final Point start, final CardinalPoint startDirection) {
+        if (this.has(player)) return;
+        this.lightCycles.put(player, new LightCycle(player, start, startDirection));
+    }
+
+    public final boolean has(final Player player) {
+        return this.lightCycles.containsKey(player);
     }
 }

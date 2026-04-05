@@ -14,11 +14,17 @@ public enum Main {
         IController controller = new Controller();
         IModel model = new Model();
         IView view = new View();
+        
         controller.setModel(model);
         controller.setView(view);
+
         model.setView(view);
+
         view.setController(controller);
         view.setModel(model);
+
+        model.load();
+
         controller.proceed();
     }
 }
