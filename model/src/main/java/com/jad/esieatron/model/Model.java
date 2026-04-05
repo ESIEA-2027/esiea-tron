@@ -1,5 +1,6 @@
 package com.jad.esieatron.model;
 
+import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.view.IView;
 
 public class Model implements IModel {
@@ -8,5 +9,15 @@ public class Model implements IModel {
     @Override
     public void setView(final IView view) {
         //      this.view = view;
+    }
+
+    @Override
+    public void turnLeft(final Player player) {
+
+    }
+
+    @Override
+    public void turnRight(final Player player) {
+
     }
 }
