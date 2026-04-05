@@ -22,6 +22,8 @@ public class Controller implements IController {
 
     @Override
     public final void proceed() {
+        if (this.model == null) throw new IllegalStateException("Model is not set");
+        if (this.view == null) throw new IllegalStateException("View is not set");
         for (; ; ) {
             this.model.playTurn();
         }
