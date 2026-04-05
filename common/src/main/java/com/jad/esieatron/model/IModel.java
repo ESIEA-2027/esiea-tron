@@ -9,4 +9,6 @@ public interface IModel {
     void turnLeft(Player player);
 
     void turnRight(Player player);
+
+    void playTurn();
 }

@@ -7,5 +7,5 @@ import com.jad.esieatron.utils.Pair;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
-public class KeyBindings extends HashMap<KeyEvent, Pair<Order, Player>> {
+class KeyBindings extends HashMap<KeyEvent, Pair<Order, Player>> {
 }

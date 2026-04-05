@@ -22,7 +22,7 @@ public class Controller implements IController {
     @Override
     public final void proceed() {
         for (; ; ) {
-            this.view.display();
+            this.model.playTurn();
         }
     }
 

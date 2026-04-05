@@ -1,4 +1,4 @@
 package com.jad.esieatron.domain;
 
-public record Player(int id) {
+public record Player(int id, Sprite sprite) {
 }

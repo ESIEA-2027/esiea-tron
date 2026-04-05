@@ -1,6 +1,6 @@
 package com.jad.esieatron.model;
 
-public enum CardinalPoint {
+enum CardinalPoint {
     NORTH("north"),
     EAST("east"),
     SOUTH("south"),
@@ -10,6 +10,10 @@ public enum CardinalPoint {
 
     CardinalPoint(final String name) {
         this.name = name;
+    }
+
+    public static CardinalPoint getRandom() {
+        return CardinalPoint.values()[(int) (Math.random() * CardinalPoint.values().length)];
     }
 
     public final String getName() {

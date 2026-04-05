@@ -42,4 +42,9 @@ public class View implements IView {
                                     (this.window.isOn("glop") ? "glop" : "Pas glop") + "\n" +
                                     (this.window.isOn("flop") ? "flop" : "Pas flop"));
     }
+
+    @Override
+    public void onModelChanged() {
+        this.display();
+    }
 }
