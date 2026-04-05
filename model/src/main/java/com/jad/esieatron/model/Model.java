@@ -13,6 +13,7 @@ public class Model implements IModel {
     private static final String GRID_WIDTH_KEY = "model.grid.width";
     private static final String GRID_HEIGHT_KEY = "model.grid.height";
 
+    @SuppressWarnings("FieldCanBeLocal")
     private final Grid grid;
     private final LightCycles lightCycles;
     private IView view;

@@ -6,7 +6,7 @@ enum Tile {
     EMPTY(' '),
     WALL('#');
 
-    private Sprite sprite;
+    private final Sprite sprite;
 
     Tile(char symbol) {
         this.sprite = new Sprite(symbol);

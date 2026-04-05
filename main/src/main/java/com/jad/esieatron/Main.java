@@ -7,7 +7,9 @@ import com.jad.esieatron.model.Model;
 import com.jad.esieatron.view.IView;
 import com.jad.esieatron.view.View;
 
-public class Main {
+public enum Main {
+    ;
+
     public static void main(String[] args) {
         IController controller = new Controller();
         IModel model = new Model();

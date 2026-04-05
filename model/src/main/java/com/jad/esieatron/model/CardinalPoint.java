@@ -21,11 +21,11 @@ enum CardinalPoint {
     }
 
     public final CardinalPoint turnLeft() {
-        return CardinalPoint.values()[(this.ordinal() - 1 + CardinalPoint.values().length) % +CardinalPoint.values().length];
+        return CardinalPoint.values()[(this.ordinal() - 1 + CardinalPoint.values().length) % CardinalPoint.values().length];
     }
 
     public final CardinalPoint turnRight() {
-        return CardinalPoint.values()[(this.ordinal() + 1 + CardinalPoint.values().length) % +CardinalPoint.values().length];
+        return CardinalPoint.values()[(this.ordinal() + 1 + CardinalPoint.values().length) % CardinalPoint.values().length];
     }
 }
 

@@ -10,7 +10,9 @@ import java.awt.event.KeyEvent;
 public class View implements IView {
     private final TextWindow window;
     private final KeyBindings keyBindings = new KeyBindings();
+    @SuppressWarnings("FieldCanBeLocal")
     private IModel model;
+    @SuppressWarnings("FieldCanBeLocal")
     private IController controller;
 
     public View() {
