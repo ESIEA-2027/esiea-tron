@@ -12,8 +12,11 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.function.BiConsumer;
 
 public class View implements IView {
     private static final String DEFAULT_CONFIG_FILE = "view.properties";
@@ -23,16 +26,15 @@ public class View implements IView {
     private static final String KEY_BINDING_KEY = "keyBinding";
 
     private final KeyBindings keyBindings = new KeyBindings();
+    private final Map<String, Boolean> previousKeyStates = new HashMap<>();
     private TextWindow window;
     @SuppressWarnings("FieldCanBeLocal")
     private IModel model;
     @SuppressWarnings("FieldCanBeLocal")
-    private IController controller;
 
     @Override
     public void load() {
         if (this.model == null) throw new IllegalStateException("Model is not set");
-        if (this.controller == null) throw new IllegalStateException("Controller is not set");
         TextWindowSettings windowSettings = new TextWindowSettings();
         final Properties properties = View.loadProperties();
         final ViewProperties viewProperties = View.loadViewProperties(properties);
@@ -98,11 +100,6 @@ public class View implements IView {
     }
 
     @Override
-    public final void setController(final IController controller) {
-        this.controller = controller;
-    }
-
-    @Override
     public final void display() {
         final GameState gameState = this.model.getState();
         final StringBuilder builder = View.render(gameState);
@@ -123,6 +120,20 @@ public class View implements IView {
             builder.append('\n');
         }
         return builder;
+    }
+
+    @Override
+    public void handleActiveInputs(final BiConsumer<Order, Player> handler) {
+        final List<Player> players = this.model.getPlayers();
+        for (Player player : players) {
+            for (Order order : Order.values()) {
+                final String action = player.id() + "." + order.name();
+                final boolean isPressed = this.window.isOn(action);
+                final boolean wasPressedBefore = this.previousKeyStates.getOrDefault(action, false);
+                if (isPressed && !wasPressedBefore) handler.accept(order, player);
+                this.previousKeyStates.put(action, isPressed);
+            }
+        }
     }
 
     private record ViewProperties(Dimension windowDimension, String windowTitle) {

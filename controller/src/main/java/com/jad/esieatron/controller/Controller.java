@@ -25,6 +25,7 @@ public class Controller implements IController {
         if (this.model == null) throw new IllegalStateException("Model is not set");
         if (this.view == null) throw new IllegalStateException("View is not set");
         for (; ; ) {
+            this.view.handleActiveInputs(this::handleOrder);
             this.model.playTurn();
             try {
                 Thread.sleep(50); // ms

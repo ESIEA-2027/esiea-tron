@@ -20,7 +20,6 @@ public enum Main {
 
         model.setView(view);
 
-        view.setController(controller);
         view.setModel(model);
 
         model.load();
