@@ -90,7 +90,7 @@ public class Model implements IModel {
     public void playTurn() {
         this.turn++;
         this.lightCycles.moveAllForward();
-        this.view.onModelChanged();
+        this.view.onModelChanged(this);
     }
 
     @Override

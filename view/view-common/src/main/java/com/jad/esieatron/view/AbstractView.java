@@ -1,7 +1,6 @@
 package com.jad.esieatron.view;
 
 import com.jad.esieatron.domain.GameState;
-import com.jad.esieatron.domain.Order;
 import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.model.IModel;
 import com.jad.textwindow.TextWindow;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
-import java.util.function.BiConsumer;
 
 public abstract class AbstractView implements IView {
     private static final String WINDOW_WIDTH_KEY = "window.width";
@@ -23,6 +21,7 @@ public abstract class AbstractView implements IView {
     private final String configFileName;
     private TextWindow window;
     private IModel model;
+    private boolean windowEnabled = false;
 
     protected AbstractView(final String configFileName) {
         this.configFileName = configFileName;
@@ -47,35 +46,17 @@ public abstract class AbstractView implements IView {
 
     @Override
     public final void load() {
-        if (this.model == null) {
-            throw new IllegalStateException("Model is not set");
-        }
-
+        if (this.model == null) throw new IllegalStateException("Model is not set");
         final Properties properties = this.loadProperties();
         final ViewProperties viewProperties = this.loadViewProperties(properties);
-
-        if (!viewProperties.windowEnabled()) {
-            return;
-        }
-
-        final TextWindowSettings settings = new TextWindowSettings();
-        settings.setTitle(viewProperties.windowTitle());
-        settings.setScreenHeight(viewProperties.windowDimension().height);
-        settings.setScreenWidth(viewProperties.windowDimension().width);
-        settings.setListenKeyboard(true);
-
-        this.configureInputBindings(settings, properties, this.model.getPlayers());
-
-        this.window = new TextWindow(settings);
-        this.window.setVisible(true);
+        this.windowEnabled = viewProperties.windowEnabled();
+        if (this.windowEnabled) this.initializeTextWindow(viewProperties, properties);
     }
 
     private Properties loadProperties() {
         final Properties properties = new Properties();
         try (InputStream stream = this.getClass().getClassLoader().getResourceAsStream(this.configFileName)) {
-            if (stream != null) {
-                properties.load(stream);
-            }
+            if (stream != null) properties.load(stream);
         } catch (IOException ignored) {
             throw new RuntimeException("Failed to load configuration file: " + this.configFileName);
         }
@@ -90,43 +71,41 @@ public abstract class AbstractView implements IView {
         return new ViewProperties(new Dimension(width, height), title, enabled);
     }
 
-    protected void configureInputBindings(final TextWindowSettings settings,
-                                          final Properties properties,
-                                          final List<Player> players) {
+    private void initializeTextWindow(final ViewProperties viewProperties, final Properties properties) {
+        final TextWindowSettings settings = new TextWindowSettings();
+        settings.setTitle(viewProperties.windowTitle());
+        settings.setScreenHeight(viewProperties.windowDimension().height);
+        settings.setScreenWidth(viewProperties.windowDimension().width);
+        settings.setListenKeyboard(true);
+
+        this.configureInputBindings(settings, properties, this.model.getPlayers());
+
+        this.window = new TextWindow(settings);
+        this.window.setVisible(true);
     }
+
+    protected abstract void configureInputBindings(final TextWindowSettings settings,
+                                                   final Properties properties,
+                                                   final List<Player> players);
 
     protected final boolean isActionActive(final String action) {
         return this.window != null && this.window.isOn(action);
     }
 
-    private record ViewProperties(Dimension windowDimension, String windowTitle, boolean windowEnabled) {
-    }    @Override
-    public final void setModel(final IModel model) {
-        this.model = model;
-    }
-
-
-
-
     protected final IModel getModel() {
-        if (this.model == null) {
-            throw new IllegalStateException("Model is not set");
-        }
+        if (this.model == null) throw new IllegalStateException("Model is not set");
         return this.model;
     }
 
     @Override
-    public final void display() {
-        if (this.window == null) {
-            return;
-        }
-        final GameState gameState = this.getModel().getState();
-        this.window.display(AbstractView.render(gameState).toString());
+    public final void setModel(final IModel model) {
+        this.model = model;
     }
 
     @Override
-    public final void onModelChanged() {
-        this.display();
+    public final void onModelChanged(final IModel model) {
+        final GameState gameState = model.getState();
+        if (this.windowEnabled) this.window.display(AbstractView.render(gameState).toString());
     }
 
     private static StringBuilder render(final GameState gameState) {
@@ -140,9 +119,12 @@ public abstract class AbstractView implements IView {
         return builder;
     }
 
-    @Override
-    public void handleActiveInputs(final BiConsumer<Order, Player> handler) {
-        // Default implementation for views that do not produce user inputs.
+    protected List<Player> getPlayers() {
+        if (this.model == null) throw new IllegalStateException("Model is not set");
+        return this.model.getPlayers();
+    }
+
+    private record ViewProperties(Dimension windowDimension, String windowTitle, boolean windowEnabled) {
     }
 }
 

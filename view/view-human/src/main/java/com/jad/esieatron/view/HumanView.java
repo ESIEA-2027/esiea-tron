@@ -41,15 +41,13 @@ public final class HumanView extends AbstractView {
 
     @Override
     public void handleActiveInputs(final BiConsumer<Order, Player> handler) {
-        final List<Player> players = this.getModel().getPlayers();
+        final List<Player> players = this.getPlayers();
         for (Player player : players) {
             for (Order order : Order.values()) {
                 final String action = player.id() + "." + order.name();
                 final boolean isPressed = this.isActionActive(action);
                 final boolean wasPressedBefore = this.previousKeyStates.getOrDefault(action, false);
-                if (isPressed && !wasPressedBefore) {
-                    handler.accept(order, player);
-                }
+                if (isPressed && !wasPressedBefore) handler.accept(order, player);
                 this.previousKeyStates.put(action, isPressed);
             }
         }

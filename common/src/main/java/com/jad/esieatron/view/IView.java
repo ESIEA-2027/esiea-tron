@@ -11,9 +11,7 @@ public interface IView {
 
     void setModel(IModel model);
 
-    void display();
-
-    void onModelChanged();
+    void onModelChanged(final IModel model);
 
     void handleActiveInputs(BiConsumer<Order, Player> handler);
 }
