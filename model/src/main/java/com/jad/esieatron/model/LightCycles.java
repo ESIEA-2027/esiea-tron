@@ -1,10 +1,13 @@
 package com.jad.esieatron.model;
 
+import com.jad.esieatron.domain.CardinalPoint;
+import com.jad.esieatron.domain.LightCycleState;
 import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.domain.Sprite;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 class LightCycles {
@@ -51,5 +54,15 @@ class LightCycles {
 
     public final boolean has(final Player player) {
         return this.lightCycles.containsKey(player);
+    }
+
+    public List<LightCycleState> getPlayerStates() {
+        return this.lightCycles.entrySet().stream()
+                .map(lightCycle -> new LightCycleState(lightCycle.getKey().id(),
+                                                       lightCycle.getKey().sprite(),
+                                                       lightCycle.getValue().getPosition().x,
+                                                       lightCycle.getValue().getPosition().y,
+                                                       lightCycle.getValue().getDirection()))
+                .toList();
     }
 }

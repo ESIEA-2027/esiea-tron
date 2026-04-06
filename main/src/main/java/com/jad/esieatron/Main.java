@@ -14,7 +14,7 @@ public enum Main {
         IController controller = new Controller();
         IModel model = new Model();
         IView view = new View();
-        
+
         controller.setModel(model);
         controller.setView(view);
 
@@ -24,7 +24,7 @@ public enum Main {
         view.setModel(model);
 
         model.load();
-
+        view.load();
         controller.proceed();
     }
 }

@@ -1,6 +1,6 @@
-package com.jad.esieatron.model;
+package com.jad.esieatron.domain;
 
-enum CardinalPoint {
+public enum CardinalPoint {
     NORTH("north"),
     EAST("east"),
     SOUTH("south"),

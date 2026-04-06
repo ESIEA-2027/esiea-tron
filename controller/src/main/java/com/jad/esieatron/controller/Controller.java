@@ -26,6 +26,12 @@ public class Controller implements IController {
         if (this.view == null) throw new IllegalStateException("View is not set");
         for (; ; ) {
             this.model.playTurn();
+            try {
+                Thread.sleep(50); // ms
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            }
         }
     }
 

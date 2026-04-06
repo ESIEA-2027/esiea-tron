@@ -16,9 +16,9 @@ class Grid {
     }
 
     private void initializeWithEmptyTiles(final Dimension size) {
-        for (int row = 0; row < size.width; row++) {
-            for (int column = 0; column < size.height; column++) {
-                this.tiles[row][column] = Tile.EMPTY;
+        for (int row = 0; row < size.height; row++) {
+            for (int column = 0; column < size.width; column++) {
+                this.tiles[column][row] = Tile.EMPTY;
             }
         }
     }
@@ -33,5 +33,15 @@ class Grid {
 
     public final Tile getTileAt(final Point position) {
         return this.tiles[position.x][position.y];
+    }
+
+    public Sprite[][] getSprites() {
+        final Sprite[][] sprites = new Sprite[this.size.width][this.size.height];
+        for (int row = 0; row < this.size.height; row++) {
+            for (int column = 0; column < this.size.width; column++) {
+                sprites[column][row] = this.tiles[column][row].getSprite();
+            }
+        }
+        return sprites;
     }
 }

@@ -12,6 +12,10 @@ enum Tile {
         this.sprite = new Sprite(symbol);
     }
 
+    public static char symbolOf(final Tile tile) {
+        return tile.getSprite().symbol();
+    }
+
     public Sprite getSprite() {
         return this.sprite;
     }

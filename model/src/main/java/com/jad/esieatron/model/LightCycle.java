@@ -1,5 +1,6 @@
 package com.jad.esieatron.model;
 
+import com.jad.esieatron.domain.CardinalPoint;
 import com.jad.esieatron.domain.Player;
 
 import java.awt.*;
@@ -8,11 +9,16 @@ import java.util.function.UnaryOperator;
 class LightCycle {
     private Point position;
     private CardinalPoint direction;
+
     public LightCycle(final Player player,
                       final Point position,
                       final CardinalPoint direction) {
         this.position = position;
         this.direction = direction;
+    }
+
+    public CardinalPoint getDirection() {
+        return this.direction;
     }
 
     public Point getPosition() {
