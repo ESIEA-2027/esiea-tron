@@ -1,6 +1,5 @@
 package com.jad.esieatron.view;
 
-import com.jad.esieatron.controller.IController;
 import com.jad.esieatron.domain.GameState;
 import com.jad.esieatron.domain.Order;
 import com.jad.esieatron.domain.Player;
@@ -28,9 +27,7 @@ public class View implements IView {
     private final KeyBindings keyBindings = new KeyBindings();
     private final Map<String, Boolean> previousKeyStates = new HashMap<>();
     private TextWindow window;
-    @SuppressWarnings("FieldCanBeLocal")
     private IModel model;
-    @SuppressWarnings("FieldCanBeLocal")
 
     @Override
     public void load() {

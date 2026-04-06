@@ -20,9 +20,7 @@ public class Model implements IModel {
     private static final String GRID_HEIGHT_KEY = "grid.height";
     private static final String NUMBER_OF_LIGHT_CYCLES_KEY = "numberOfLightCycles";
     private static final String MODEL_LIGHT_CYCLE = "lightCycle";
-    @SuppressWarnings({"FieldCanBeLocal", "MismatchedQueryAndUpdateOfCollection"})
     private final List<Player> players;
-    @SuppressWarnings("FieldCanBeLocal")
     private Grid grid;
     private LightCycles lightCycles;
     private IView view;

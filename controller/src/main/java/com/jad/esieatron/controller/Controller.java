@@ -7,7 +7,6 @@ import com.jad.esieatron.view.IView;
 
 public class Controller implements IController {
     private IModel model;
-    @SuppressWarnings("FieldCanBeLocal")
     private IView view;
 
     @Override
