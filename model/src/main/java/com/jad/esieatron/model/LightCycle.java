@@ -7,44 +7,55 @@ import java.awt.*;
 import java.util.Random;
 import java.util.function.UnaryOperator;
 
-public class LightCycle {
+class LightCycle {
     private final Player player;
     private Point position;
     private CardinalPoint direction;
+    private Boolean alive;
 
-    public LightCycle(final Player player, final Point position, final CardinalPoint direction) {
+    LightCycle(final Player player, final Point position, final CardinalPoint direction) {
         this.player = player;
         this.position = position;
         this.direction = direction;
+        this.alive = true;
     }
 
-    public void moveForward(final UnaryOperator<Point> normalizer) {
+
+    Boolean isAlive() {
+        return this.alive;
+    }
+
+    void moveForward(final UnaryOperator<Point> normalizer) {
         this.position = normalizer.apply(switch (this.direction) {
             case NORTH -> new Point(this.position.x, this.position.y - 1);
             case EAST -> new Point(this.position.x + 1, this.position.y);
             case SOUTH -> new Point(this.position.x, this.position.y + 1);
             case WEST -> new Point(this.position.x - 1, this.position.y);
         });
-        if (new Random().nextInt(100) < 20) {
+        if (new Random().nextInt(100) < 10) {
             if (new Random().nextBoolean()) this.turnLeft();
             this.turnRight();
         }
 
     }
 
-    public void turnLeft() {
+    void turnLeft() {
         this.direction = this.direction.turnLeft();
     }
 
-    public void turnRight() {
+    void turnRight() {
         this.direction = this.direction.turnRight();
     }
 
-    public final Point getPosition() {
+    final Point getPosition() {
         return this.position;
     }
 
-    public Player getPlayer() {
+    Player getPlayer() {
         return this.player;
+    }
+
+    void crash() {
+        this.alive = false;
     }
 }

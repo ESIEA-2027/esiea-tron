@@ -1,6 +1,7 @@
 package com.jad.esieatron.model;
 
 import com.jad.esieatron.domain.CardinalPoint;
+import com.jad.esieatron.domain.Counter;
 import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.domain.Sprite;
 import com.jad.esieatron.view.IView;
@@ -12,19 +13,23 @@ public class Model implements IModel {
 
     private final Grid grid;
     private final LightCycles lightCycles;
+    private final Counter nbTurns = new Counter();
     private IView view;
 
     public Model() {
         this.grid = new Grid(Model.GRID_DIMENSION);
-        this.lightCycles = new LightCycles(this.grid::normalize, this.grid::putWallAt);
-        this.lightCycles.add(new LightCycle(new Player(1, new Sprite('#'), true),
+        this.lightCycles = new LightCycles(this.grid::normalize, this.grid::tryPlaceWallAt);
+        this.lightCycles.add(new LightCycle(new Player(1, new Sprite('#')),
                                             new Point(10, 10),
                                             CardinalPoint.EAST));
-        this.lightCycles.add(new LightCycle(new Player(2, new Sprite('@'), true),
+        this.lightCycles.add(new LightCycle(new Player(2, new Sprite('@')),
                                             new Point(20, 20),
                                             CardinalPoint.WEST));
-        this.lightCycles.add(new LightCycle(new Player(3, new Sprite('&'), true),
+        this.lightCycles.add(new LightCycle(new Player(3, new Sprite('&')),
                                             new Point(30, 30),
+                                            CardinalPoint.SOUTH));
+        this.lightCycles.add(new LightCycle(new Player(3, new Sprite('?')),
+                                            new Point(50, 40),
                                             CardinalPoint.SOUTH));
     }
 
@@ -45,6 +50,7 @@ public class Model implements IModel {
 
     @Override
     public void playTurn() {
+        this.nbTurns.increment();
         this.lightCycles.moveForwardAll();
     }
 }

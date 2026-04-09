@@ -6,8 +6,8 @@ import com.jad.esieatron.domain.Sprite;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Tile {
-    public static final Tile EMPTY = new Tile(new Player(0, new Sprite(' '), false));
+final class Tile {
+    public static final Tile EMPTY = new Tile(new Player(0, new Sprite(' ')));
 
     private static final List<Tile> tiles = new ArrayList<>();
     private final Player player;
@@ -16,7 +16,7 @@ public final class Tile {
         this.player = player;
     }
 
-    public static Tile get(final Player player) {
+    static Tile get(final Player player) {
         for (Tile tile : Tile.tiles) {
             if (tile.player == player) return tile;
         }
@@ -25,7 +25,7 @@ public final class Tile {
         return tile;
     }
 
-    public Sprite getSprite() {
+    Sprite getSprite() {
         return this.player.sprite();
     }
 }

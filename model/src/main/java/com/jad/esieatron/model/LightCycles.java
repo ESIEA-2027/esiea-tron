@@ -4,22 +4,22 @@ import com.jad.esieatron.domain.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 
-public class LightCycles extends ArrayList<LightCycle> {
+class LightCycles extends ArrayList<LightCycle> {
     private final UnaryOperator<Point> normalizer;
-    private final BiConsumer<Point, Player> onMoved;
+    private final BiFunction<Point, Player, Boolean> onMoved;
 
-    public LightCycles(final UnaryOperator<Point> normalizer, final BiConsumer<Point, Player> onMoved) {
+    LightCycles(final UnaryOperator<Point> normalizer, final BiFunction<Point, Player, Boolean> onMoved) {
         this.normalizer = normalizer;
         this.onMoved = onMoved;
     }
 
-    public void moveForwardAll() {
+    void moveForwardAll() {
         for (LightCycle lightCycle : this) {
-            this.onMoved.accept(lightCycle.getPosition(), lightCycle.getPlayer());
-            lightCycle.moveForward(this.normalizer);
+            if (!this.onMoved.apply(lightCycle.getPosition(), lightCycle.getPlayer())) lightCycle.crash();
+            if (lightCycle.isAlive()) lightCycle.moveForward(this.normalizer);
         }
     }
 }
