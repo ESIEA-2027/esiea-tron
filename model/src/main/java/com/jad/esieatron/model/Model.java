@@ -17,13 +17,13 @@ public class Model implements IModel {
     public Model() {
         this.grid = new Grid(Model.GRID_DIMENSION);
         this.lightCycles = new LightCycles(this.grid::normalize, this.grid::putWallAt);
-        this.lightCycles.add(new LightCycle(new Player(1, new Sprite('#')),
+        this.lightCycles.add(new LightCycle(new Player(1, new Sprite('#'), true),
                                             new Point(10, 10),
                                             CardinalPoint.EAST));
-        this.lightCycles.add(new LightCycle(new Player(1, new Sprite('#')),
+        this.lightCycles.add(new LightCycle(new Player(2, new Sprite('@'), true),
                                             new Point(20, 20),
                                             CardinalPoint.WEST));
-        this.lightCycles.add(new LightCycle(new Player(1, new Sprite('#')),
+        this.lightCycles.add(new LightCycle(new Player(3, new Sprite('&'), true),
                                             new Point(30, 30),
                                             CardinalPoint.SOUTH));
     }

@@ -1,5 +1,6 @@
 package com.jad.esieatron.model;
 
+import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.domain.Sprite;
 
 import java.awt.*;
@@ -28,9 +29,9 @@ public class Grid {
         return sprites;
     }
 
-    public final void putWallAt(final Point position) {
+    public final void putWallAt(final Point position, final Player player) {
         final Point pointNormalized = this.normalize(position);
-        this.tiles[pointNormalized.x][pointNormalized.y] = Tile.WALL;
+        this.tiles[pointNormalized.x][pointNormalized.y] = Tile.get(player);
     }
 
     public final Point normalize(final Point point) {

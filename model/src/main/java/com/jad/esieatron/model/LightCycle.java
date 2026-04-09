@@ -43,4 +43,8 @@ public class LightCycle {
     public final Point getPosition() {
         return this.position;
     }
+
+    public Player getPlayer() {
+        return this.player;
+    }
 }

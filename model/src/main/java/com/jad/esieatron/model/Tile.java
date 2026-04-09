@@ -1,16 +1,31 @@
 package com.jad.esieatron.model;
 
-public enum Tile {
-    WALL(new com.jad.esieatron.domain.Sprite('#')),
-    EMPTY(new com.jad.esieatron.domain.Sprite(' '));
+import com.jad.esieatron.domain.Player;
+import com.jad.esieatron.domain.Sprite;
 
-    private final com.jad.esieatron.domain.Sprite sprite;
+import java.util.ArrayList;
+import java.util.List;
 
-    Tile(final com.jad.esieatron.domain.Sprite sprite) {
-        this.sprite = sprite;
+public final class Tile {
+    public static final Tile EMPTY = new Tile(new Player(0, new Sprite(' '), false));
+
+    private static final List<Tile> tiles = new ArrayList<>();
+    private final Player player;
+
+    private Tile(final Player player) {
+        this.player = player;
     }
 
-    public com.jad.esieatron.domain.Sprite getSprite() {
-        return this.sprite;
+    public static Tile get(final Player player) {
+        for (Tile tile : Tile.tiles) {
+            if (tile.player == player) return tile;
+        }
+        Tile tile = new Tile(player);
+        Tile.tiles.add(tile);
+        return tile;
+    }
+
+    public Sprite getSprite() {
+        return this.player.sprite();
     }
 }
