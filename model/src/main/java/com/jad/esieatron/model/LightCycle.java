@@ -4,7 +4,6 @@ import com.jad.esieatron.domain.CardinalPoint;
 import com.jad.esieatron.domain.Player;
 
 import java.awt.*;
-import java.util.Random;
 import java.util.function.UnaryOperator;
 
 class LightCycle {
@@ -32,11 +31,6 @@ class LightCycle {
             case SOUTH -> new Point(this.position.x, this.position.y + 1);
             case WEST -> new Point(this.position.x - 1, this.position.y);
         });
-        if (new Random().nextInt(100) < 10) {
-            if (new Random().nextBoolean()) this.turnLeft();
-            this.turnRight();
-        }
-
     }
 
     void turnLeft() {

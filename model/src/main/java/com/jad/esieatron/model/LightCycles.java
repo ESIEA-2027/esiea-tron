@@ -22,4 +22,18 @@ class LightCycles extends ArrayList<LightCycle> {
             if (lightCycle.isAlive()) lightCycle.moveForward(this.normalizer);
         }
     }
+
+    public void turnLeft(final Player player) {
+        this.stream()
+                .filter(lightCycle -> lightCycle.getPlayer() == player)
+                .findFirst()
+                .ifPresent(LightCycle::turnLeft);
+    }
+
+    public void turnRight(final Player player) {
+        this.stream()
+                .filter(lightCycle -> lightCycle.getPlayer() == player)
+                .findFirst()
+                .ifPresent(LightCycle::turnRight);
+    }
 }

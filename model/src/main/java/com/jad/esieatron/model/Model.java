@@ -6,6 +6,9 @@ import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.domain.Sprite;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Model implements IModel {
     static final Dimension GRID_DIMENSION = new Dimension(200, 50);
@@ -14,22 +17,20 @@ public class Model implements IModel {
     private final LightCycles lightCycles;
     private final Counter nbTurns = new Counter();
     private Runnable onChange;
+    private List<Player> players = new ArrayList<>();
 
     public Model() {
         this.grid = new Grid(Model.GRID_DIMENSION);
         this.lightCycles = new LightCycles(this.grid::normalize, this.grid::tryPlaceWallAt);
-        this.lightCycles.add(new LightCycle(new Player(1, new Sprite('#')),
+        this.players.add(new Player(1, new Sprite('#')));
+        this.lightCycles.add(new LightCycle(this.players.getFirst(),
                                             new Point(10, 10),
                                             CardinalPoint.EAST));
-        this.lightCycles.add(new LightCycle(new Player(2, new Sprite('@')),
-                                            new Point(20, 20),
-                                            CardinalPoint.WEST));
-        this.lightCycles.add(new LightCycle(new Player(3, new Sprite('&')),
-                                            new Point(30, 30),
-                                            CardinalPoint.SOUTH));
-        this.lightCycles.add(new LightCycle(new Player(3, new Sprite('?')),
-                                            new Point(50, 40),
-                                            CardinalPoint.SOUTH));
+    }
+
+    @Override
+    public List<Player> getPlayers() {
+        return Collections.unmodifiableList(this.players);
     }
 
     @Override
@@ -53,5 +54,15 @@ public class Model implements IModel {
     @Override
     public void setOnChange(final Runnable onChange) {
         this.onChange = onChange;
+    }
+
+    @Override
+    public void turnLeft(final Player player) {
+        this.lightCycles.turnLeft(player);
+    }
+
+    @Override
+    public void turnRight(final Player player) {
+        this.lightCycles.turnRight(player);
     }
 }

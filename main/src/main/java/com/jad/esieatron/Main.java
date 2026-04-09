@@ -13,6 +13,7 @@ public class Main {
         IModel model = new Model();
         IView view = new View();
         controller.setModel(model);
+        controller.setView(view);
         view.setController(controller);
         view.setModel(model);
         controller.proceed();

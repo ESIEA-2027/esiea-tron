@@ -9,18 +9,14 @@ import com.jad.textwindow.TextWindowSettings;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 public class View implements IView {
-    private final KeysPlayerBinding keysPlayerBinding = new KeysPlayerBinding();
-
+    private final Map<String, Boolean> previousKeyStates = new HashMap<>();
     private TextWindow window;
     private IModel model;
     private IController controller;
-
-    public View() {
-        this.keysPlayerBinding.put(KeyEvent.VK_Q, null, GameIntent.TURN_LEFT);
-        this.keysPlayerBinding.put(KeyEvent.VK_D, null, GameIntent.TURN_RIGHT);
-    }
 
     @Override
     public void setModel(final IModel model) {
@@ -30,9 +26,8 @@ public class View implements IView {
         TextWindowSettings settings = new TextWindowSettings();
         settings.setTitle("Ma fenêtre à moi");
         settings.setScreenDimension(gridDimension);
-        for (Gam : this.keysPlayerBinding.keySet()) {
-            settings.addKeyboardListener(keyboardInput, this.keysPlayerBinding.get(keyboardInput).gameIntent().name());
-        }
+        settings.addKeyboardListener(KeyEvent.VK_Q, "1-turn-left");
+        settings.addKeyboardListener(KeyEvent.VK_D, "1-turn-right");
         this.window = new TextWindow(settings);
         this.window.setVisible(true);
     }
@@ -40,6 +35,24 @@ public class View implements IView {
     @Override
     public void setController(final IController controller) {
         this.controller = controller;
+    }
+
+    @Override
+    public void handleActiveGameIntent() {
+        boolean isPressed = this.window.isOn("1-turn-left");
+        boolean previousState = this.previousKeyStates.getOrDefault("1-turn-left", false);
+        if (isPressed && !previousState) {
+            this.controller.handleGameIntent(this.model.getPlayers().getFirst(),
+                                             GameIntent.TURN_LEFT);
+        }
+        this.previousKeyStates.put("1-turn-left", isPressed);
+        isPressed = this.window.isOn("1-turn-right");
+        previousState = this.previousKeyStates.getOrDefault("1-turn-right", false);
+        if (isPressed && !previousState) {
+            this.controller.handleGameIntent(this.model.getPlayers().getFirst(),
+                                             GameIntent.TURN_RIGHT);
+        }
+        this.previousKeyStates.put("1-turn-right", isPressed);
     }
 
     public void display() {
