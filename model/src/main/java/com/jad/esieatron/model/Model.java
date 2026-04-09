@@ -22,4 +22,9 @@ public class Model implements IModel {
     public Dimension getGridDimension() {
         return Model.GRID_DIMENSION;
     }
+
+    @Override
+    public GameState getState() {
+        return new GameState(Model.GRID_DIMENSION, this.grid.getSprites());
+    }
 }

@@ -8,4 +8,6 @@ public interface IModel {
     void setView(IView view);
 
     Dimension getGridDimension();
+
+    GameState getState();
 }

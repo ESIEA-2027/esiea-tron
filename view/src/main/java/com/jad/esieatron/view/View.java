@@ -12,7 +12,6 @@ public class View implements IView {
     private TextWindow window;
     private IModel model;
     private IController controller;
-    private Dimension gridDimension;
 
     public View() {
     }
@@ -20,10 +19,10 @@ public class View implements IView {
     @Override
     public void setModel(final IModel model) {
         this.model = model;
-        this.gridDimension = this.model.getGridDimension();
+        final Dimension gridDimension = this.model.getGridDimension();
         TextWindowSettings settings = new TextWindowSettings();
         settings.setTitle("Ma fenêtre à moi");
-        settings.setScreenDimension(this.gridDimension);
+        settings.setScreenDimension(gridDimension);
         this.window = new TextWindow(settings);
         this.window.setVisible(true);
     }
@@ -35,6 +34,14 @@ public class View implements IView {
 
     @Override
     public void display() {
-        GameState gridState = this.model.getState();
+        GameState gameState = this.model.getState();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int row = 0; row < gameState.dimension().height; row++) {
+            for (int column = 0; column < gameState.dimension().width; column++) {
+                stringBuilder.append(gameState.sprites()[column][row].pixel());
+            }
+            stringBuilder.append("\n");
+        }
+        this.window.display(stringBuilder.toString());
     }
 }

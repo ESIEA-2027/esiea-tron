@@ -1,5 +1,7 @@
 package com.jad.esieatron.model;
 
+import com.jad.esieatron.domain.Sprite;
+
 import java.awt.*;
 
 public class Grid {
@@ -14,5 +16,15 @@ public class Grid {
                 this.tiles[column][row] = Tile.EMPTY;
             }
         }
+    }
+
+    public Sprite[][] getSprites() {
+        final Sprite[][] sprites = new Sprite[this.dimension.width][this.dimension.height];
+        for (int row = 0; row < this.dimension.height; row++) {
+            for (int column = 0; column < this.dimension.width; column++) {
+                sprites[column][row] = this.tiles[column][row].getSprite();
+            }
+        }
+        return sprites;
     }
 }
