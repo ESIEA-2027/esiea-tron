@@ -10,4 +10,6 @@ public interface IModel {
     Dimension getGridDimension();
 
     GameState getState();
+
+    void playTurn();
 }

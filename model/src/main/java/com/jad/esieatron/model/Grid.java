@@ -28,6 +28,11 @@ public class Grid {
         return sprites;
     }
 
+    public final void putWallAt(final Point position) {
+        final Point pointNormalized = this.normalize(position);
+        this.tiles[pointNormalized.x][pointNormalized.y] = Tile.WALL;
+    }
+
     public final Point normalize(final Point point) {
         return new Point((point.x + this.dimension.width) % this.dimension.width,
                          (point.y + this.dimension.height) % this.dimension.height);

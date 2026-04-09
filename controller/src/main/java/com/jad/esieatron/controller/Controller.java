@@ -20,7 +20,13 @@ public class Controller implements IController {
     @Override
     public void proceed() {
         for (; ; ) {
+            this.model.playTurn();
             this.view.display();
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }

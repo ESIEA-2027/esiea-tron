@@ -1,5 +1,8 @@
 package com.jad.esieatron.model;
 
+import com.jad.esieatron.domain.CardinalPoint;
+import com.jad.esieatron.domain.Player;
+import com.jad.esieatron.domain.Sprite;
 import com.jad.esieatron.view.IView;
 
 import java.awt.*;
@@ -13,7 +16,16 @@ public class Model implements IModel {
 
     public Model() {
         this.grid = new Grid(Model.GRID_DIMENSION);
-        this.lightCycles = new LightCycles(this.grid::normalize);
+        this.lightCycles = new LightCycles(this.grid::normalize, this.grid::putWallAt);
+        this.lightCycles.add(new LightCycle(new Player(1, new Sprite('#')),
+                                            new Point(10, 10),
+                                            CardinalPoint.EAST));
+        this.lightCycles.add(new LightCycle(new Player(1, new Sprite('#')),
+                                            new Point(20, 20),
+                                            CardinalPoint.WEST));
+        this.lightCycles.add(new LightCycle(new Player(1, new Sprite('#')),
+                                            new Point(30, 30),
+                                            CardinalPoint.SOUTH));
     }
 
     @Override
@@ -29,5 +41,10 @@ public class Model implements IModel {
     @Override
     public GameState getState() {
         return new GameState(Model.GRID_DIMENSION, this.grid.getSprites());
+    }
+
+    @Override
+    public void playTurn() {
+        this.lightCycles.moveForwardAll();
     }
 }
