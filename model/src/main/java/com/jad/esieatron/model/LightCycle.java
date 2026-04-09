@@ -4,6 +4,7 @@ import com.jad.esieatron.domain.CardinalPoint;
 import com.jad.esieatron.domain.Player;
 
 import java.awt.*;
+import java.util.function.UnaryOperator;
 
 public class LightCycle {
     private final Player player;
@@ -24,12 +25,12 @@ public class LightCycle {
         this.direction = this.direction.turnRight();
     }
 
-    public void moveForward() {
-        this.position = switch (this.direction) {
+    public void moveForward(final UnaryOperator<Point> normalizer) {
+        this.position = normalizer.apply(switch (this.direction) {
             case NORTH -> new Point(this.position.x, this.position.y - 1);
             case EAST -> new Point(this.position.x + 1, this.position.y);
             case SOUTH -> new Point(this.position.x, this.position.y + 1);
             case WEST -> new Point(this.position.x - 1, this.position.y);
-        };
+        });
     }
 }

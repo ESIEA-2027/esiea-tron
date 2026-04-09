@@ -27,4 +27,9 @@ public class Grid {
         }
         return sprites;
     }
+
+    public final Point normalize(final Point point) {
+        return new Point((point.x + this.dimension.width) % this.dimension.width,
+                         (point.y + this.dimension.height) % this.dimension.height);
+    }
 }
