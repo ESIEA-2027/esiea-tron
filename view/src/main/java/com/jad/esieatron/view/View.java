@@ -1,32 +1,31 @@
 package com.jad.esieatron.view;
 
 import com.jad.esieatron.controller.IController;
+import com.jad.esieatron.model.GameState;
 import com.jad.esieatron.model.IModel;
 import com.jad.textwindow.TextWindow;
 import com.jad.textwindow.TextWindowSettings;
 
-import java.awt.event.KeyEvent;
+import java.awt.*;
 
 public class View implements IView {
-    private final TextWindow window;
+    private TextWindow window;
     private IModel model;
     private IController controller;
+    private Dimension gridDimension;
 
     public View() {
-        TextWindowSettings windowSettings = new TextWindowSettings();
-        windowSettings.setTitle("Ma fenêtre à moi");
-        windowSettings.setScreenHeight(10);
-        windowSettings.setScreenWidth(40);
-        windowSettings.setListenKeyboard(true);
-        windowSettings.addKeyboardListener(KeyEvent.VK_Q, "plop");
-        windowSettings.addKeyboardListener(KeyEvent.VK_D, "glop");
-        windowSettings.addKeyboardListener(KeyEvent.VK_S, "flop");
-        this.window = new TextWindow(windowSettings);
     }
 
     @Override
     public void setModel(final IModel model) {
         this.model = model;
+        this.gridDimension = this.model.getGridDimension();
+        TextWindowSettings settings = new TextWindowSettings();
+        settings.setTitle("Ma fenêtre à moi");
+        settings.setScreenDimension(this.gridDimension);
+        this.window = new TextWindow(settings);
+        this.window.setVisible(true);
     }
 
     @Override
@@ -36,9 +35,6 @@ public class View implements IView {
 
     @Override
     public void display() {
-        this.window.setVisible(true);
-        this.window.display((this.window.isOn("plop") ? "plop" : "Pas plop") + "\n" +
-                                    (this.window.isOn("glop") ? "glop" : "Pas glop") + "\n" +
-                                    (this.window.isOn("flop") ? "flop" : "Pas flop"));
+        GameState gridState = this.model.getState();
     }
 }
