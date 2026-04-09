@@ -1,28 +1,38 @@
 package com.jad.esieatron.view;
 
 import com.jad.esieatron.controller.IController;
+import com.jad.esieatron.domain.GameIntent;
 import com.jad.esieatron.model.GameState;
 import com.jad.esieatron.model.IModel;
 import com.jad.textwindow.TextWindow;
 import com.jad.textwindow.TextWindowSettings;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class View implements IView {
+    private final KeysPlayerBinding keysPlayerBinding = new KeysPlayerBinding();
+
     private TextWindow window;
     private IModel model;
     private IController controller;
 
     public View() {
+        this.keysPlayerBinding.put(KeyEvent.VK_Q, null, GameIntent.TURN_LEFT);
+        this.keysPlayerBinding.put(KeyEvent.VK_D, null, GameIntent.TURN_RIGHT);
     }
 
     @Override
     public void setModel(final IModel model) {
         this.model = model;
         final Dimension gridDimension = this.model.getGridDimension();
+        this.model.setOnChange(this::display);
         TextWindowSettings settings = new TextWindowSettings();
         settings.setTitle("Ma fenêtre à moi");
         settings.setScreenDimension(gridDimension);
+        for (Gam : this.keysPlayerBinding.keySet()) {
+            settings.addKeyboardListener(keyboardInput, this.keysPlayerBinding.get(keyboardInput).gameIntent().name());
+        }
         this.window = new TextWindow(settings);
         this.window.setVisible(true);
     }
@@ -32,7 +42,6 @@ public class View implements IView {
         this.controller = controller;
     }
 
-    @Override
     public void display() {
         GameState gameState = this.model.getState();
         StringBuilder stringBuilder = new StringBuilder();

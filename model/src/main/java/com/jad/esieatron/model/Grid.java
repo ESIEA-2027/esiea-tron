@@ -8,6 +8,7 @@ import java.awt.*;
 class Grid {
     private final Dimension dimension;
     private final Tile[][] tiles;
+    private boolean updated;
 
     Grid(final Dimension dimension) {
         this.dimension = dimension;
@@ -17,9 +18,14 @@ class Grid {
                 this.tiles[column][row] = Tile.EMPTY;
             }
         }
+        this.updated = true;
     }
 
-    Sprite[][] getSprites() {
+    void resetChanged() {
+        this.updated = false;
+    }
+
+    final Sprite[][] getSprites() {
         final Sprite[][] sprites = new Sprite[this.dimension.width][this.dimension.height];
         for (int row = 0; row < this.dimension.height; row++) {
             for (int column = 0; column < this.dimension.width; column++) {
@@ -29,9 +35,10 @@ class Grid {
         return sprites;
     }
 
-    Boolean tryPlaceWallAt(final Point position, final Player player) {
+    final Boolean tryPlaceWallAt(final Point position, final Player player) {
         if (!this.isEmpty(position)) return false;
         this.putWallAt(position, player);
+        this.updated = true;
         return true;
     }
 
@@ -48,5 +55,9 @@ class Grid {
     final Point normalize(final Point point) {
         return new Point((point.x + this.dimension.width) % this.dimension.width,
                          (point.y + this.dimension.height) % this.dimension.height);
+    }
+
+    public boolean hasChanged() {
+        return this.updated;
     }
 }

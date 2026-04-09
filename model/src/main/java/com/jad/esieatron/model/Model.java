@@ -4,7 +4,6 @@ import com.jad.esieatron.domain.CardinalPoint;
 import com.jad.esieatron.domain.Counter;
 import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.domain.Sprite;
-import com.jad.esieatron.view.IView;
 
 import java.awt.*;
 
@@ -14,7 +13,7 @@ public class Model implements IModel {
     private final Grid grid;
     private final LightCycles lightCycles;
     private final Counter nbTurns = new Counter();
-    private IView view;
+    private Runnable onChange;
 
     public Model() {
         this.grid = new Grid(Model.GRID_DIMENSION);
@@ -34,11 +33,6 @@ public class Model implements IModel {
     }
 
     @Override
-    public void setView(final IView view) {
-        this.view = view;
-    }
-
-    @Override
     public Dimension getGridDimension() {
         return Model.GRID_DIMENSION;
     }
@@ -51,6 +45,13 @@ public class Model implements IModel {
     @Override
     public void playTurn() {
         this.nbTurns.increment();
+        this.grid.resetChanged();
         this.lightCycles.moveForwardAll();
+        if (this.grid.hasChanged() && this.onChange != null) this.onChange.run();
+    }
+
+    @Override
+    public void setOnChange(final Runnable onChange) {
+        this.onChange = onChange;
     }
 }
