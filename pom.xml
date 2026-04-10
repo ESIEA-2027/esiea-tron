@@ -27,13 +27,6 @@
             <url>https://maven.pkg.github.com/Jean-Aymeric/maven-public-repository</url>
         </repository>
     </repositories>
-    <dependencies>
-        <dependency>
-            <groupId>com.jad</groupId>
-            <artifactId>textwindow</artifactId>
-            <version>1.2.1</version>
-        </dependency>
-    </dependencies>
 
     <build>
         <pluginManagement>
