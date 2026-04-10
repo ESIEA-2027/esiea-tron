@@ -5,13 +5,12 @@ import com.jad.esieatron.domain.GameIntent;
 import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.model.GameState;
 import com.jad.esieatron.model.IModel;
+import com.jad.esieatron.utils.EsieaTronUtils;
 import com.jad.textwindow.TextWindow;
 import com.jad.textwindow.TextWindowSettings;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class View implements IView {
         TextWindowSettings settings = new TextWindowSettings();
         settings.setTitle("Ma fenêtre à moi");
         settings.setScreenDimension(gridDimension);
-        final Properties properties = this.loadProperties(View.VIEW_PROPERTIES);
+        final Properties properties = EsieaTronUtils.loadProperties(this.getClass(), View.VIEW_PROPERTIES);
         List<Player> players = this.model.getPlayers();
         for (Player player : players) {
             for (GameIntent intent : GameIntent.values()) {
@@ -74,16 +73,6 @@ public class View implements IView {
             stringBuilder.append("\n");
         }
         this.window.display(stringBuilder.toString());
-    }
-
-    private Properties loadProperties(final String fileName) {
-        final Properties properties = new Properties();
-        try (InputStream input = this.getClass().getClassLoader().getResourceAsStream(fileName)) {
-            if (input != null) properties.load(input);
-        } catch (IOException exception) {
-            throw new RuntimeException("Failed to load view properties", exception);
-        }
-        return properties;
     }
 
     private static int parseKeyCode(final String keyCodeString) {
