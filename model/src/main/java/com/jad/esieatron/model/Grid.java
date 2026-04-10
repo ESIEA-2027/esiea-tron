@@ -2,6 +2,7 @@ package com.jad.esieatron.model;
 
 import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.domain.Sprite;
+import com.jad.esieatron.utils.EsieaTronUtils;
 
 import java.awt.*;
 
@@ -53,8 +54,8 @@ class Grid {
     }
 
     final Point normalize(final Point point) {
-        return new Point((point.x + this.dimension.width) % this.dimension.width,
-                         (point.y + this.dimension.height) % this.dimension.height);
+        Dimension dimension = this.dimension;
+        return EsieaTronUtils.normalize(point, dimension);
     }
 
     public boolean hasChanged() {

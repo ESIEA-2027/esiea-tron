@@ -5,8 +5,10 @@ import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.domain.PlayerType;
 import com.jad.esieatron.model.GameState;
 import com.jad.esieatron.model.PlayerState;
+import com.jad.esieatron.utils.EsieaTronUtils;
 import com.jad.textwindow.TextWindowSettings;
 
+import java.awt.*;
 import java.util.HashMap;
 
 public class ViewIA extends AbstractView {
@@ -21,7 +23,12 @@ public class ViewIA extends AbstractView {
     public void render(final GameState gameState) {
         for (PlayerState playerState : gameState.playerStates()) {
             if (playerState.player().playerType() == PlayerType.IA) {
-                this.gameIntents.put(playerState.player(), GameIntent.TURN_LEFT);
+                Point nextPosition = EsieaTronUtils.normalize(
+                        EsieaTronUtils.getNextPosition(playerState.direction(), playerState.position()),
+                        gameState.dimension());
+                if (gameState.sprites()[nextPosition.x][nextPosition.y].pixel() != ' ') {
+                    this.gameIntents.put(playerState.player(), GameIntent.TURN_LEFT);
+                }
             }
         }
     }
