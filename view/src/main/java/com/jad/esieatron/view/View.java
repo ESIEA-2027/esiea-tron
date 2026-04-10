@@ -2,6 +2,7 @@ package com.jad.esieatron.view;
 
 import com.jad.esieatron.controller.IController;
 import com.jad.esieatron.domain.GameIntent;
+import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.model.GameState;
 import com.jad.esieatron.model.IModel;
 import com.jad.textwindow.TextWindow;
@@ -9,10 +10,15 @@ import com.jad.textwindow.TextWindowSettings;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class View implements IView {
+    private static final String VIEW_PROPERTIES = "view.properties";
     private final Map<String, Boolean> previousKeyStates = new HashMap<>();
     private TextWindow window;
     private IModel model;
@@ -26,10 +32,15 @@ public class View implements IView {
         TextWindowSettings settings = new TextWindowSettings();
         settings.setTitle("Ma fenêtre à moi");
         settings.setScreenDimension(gridDimension);
-        settings.addKeyboardListener(KeyEvent.VK_Q, "1-turn-left");
-        settings.addKeyboardListener(KeyEvent.VK_D, "1-turn-right");
-        settings.addKeyboardListener(KeyEvent.VK_LEFT, "2-turn-left");
-        settings.addKeyboardListener(KeyEvent.VK_RIGHT, "2-turn-right");
+        final Properties properties = this.loadProperties(View.VIEW_PROPERTIES);
+        List<Player> players = this.model.getPlayers();
+        for (Player player : players) {
+            for (GameIntent intent : GameIntent.values()) {
+                settings.addKeyboardListener(
+                        View.parseKeyCode(properties.getProperty("keyBinding." + player.id() + "." + intent.getName())),
+                        player.id() + "-" + intent.getName());
+            }
+        }
         this.window = new TextWindow(settings);
         this.window.setVisible(true);
     }
@@ -41,37 +52,16 @@ public class View implements IView {
 
     @Override
     public void handleActiveGameIntent() {
-        boolean isPressed = this.window.isOn("1-turn-left");
-        boolean previousState = this.previousKeyStates.getOrDefault("1-turn-left", false);
-        if (isPressed && !previousState) {
-            this.controller.handleGameIntent(this.model.getPlayers().getFirst(),
-                                             GameIntent.TURN_LEFT);
+        final List<Player> players = this.model.getPlayers();
+        for (Player player : players) {
+            for (GameIntent gameIntent : GameIntent.values()) {
+                final String intent = player.id() + "-" + gameIntent.getName();
+                final boolean isPressed = this.window.isOn(intent);
+                final boolean previousState = this.previousKeyStates.getOrDefault(intent, false);
+                if (isPressed && !previousState) this.controller.handleGameIntent(player, gameIntent);
+                this.previousKeyStates.put(intent, isPressed);
+            }
         }
-        this.previousKeyStates.put("1-turn-left", isPressed);
-
-        isPressed = this.window.isOn("1-turn-right");
-        previousState = this.previousKeyStates.getOrDefault("1-turn-right", false);
-        if (isPressed && !previousState) {
-            this.controller.handleGameIntent(this.model.getPlayers().getFirst(),
-                                             GameIntent.TURN_RIGHT);
-        }
-        this.previousKeyStates.put("1-turn-right", isPressed);
-
-        isPressed = this.window.isOn("2-turn-right");
-        previousState = this.previousKeyStates.getOrDefault("2-turn-right", false);
-        if (isPressed && !previousState) {
-            this.controller.handleGameIntent(this.model.getPlayers().get(1),
-                                             GameIntent.TURN_RIGHT);
-        }
-        this.previousKeyStates.put("2-turn-right", isPressed);
-
-        isPressed = this.window.isOn("2-turn-right");
-        previousState = this.previousKeyStates.getOrDefault("2-turn-right", false);
-        if (isPressed && !previousState) {
-            this.controller.handleGameIntent(this.model.getPlayers().get(1),
-                                             GameIntent.TURN_RIGHT);
-        }
-        this.previousKeyStates.put("2-turn-right", isPressed);
     }
 
     public void display() {
@@ -84,5 +74,33 @@ public class View implements IView {
             stringBuilder.append("\n");
         }
         this.window.display(stringBuilder.toString());
+    }
+
+    private Properties loadProperties(final String fileName) {
+        final Properties properties = new Properties();
+        try (InputStream input = this.getClass().getClassLoader().getResourceAsStream(fileName)) {
+            if (input != null) properties.load(input);
+        } catch (IOException exception) {
+            throw new RuntimeException("Failed to load view properties", exception);
+        }
+        return properties;
+    }
+
+    private static int parseKeyCode(final String keyCodeString) {
+        final String key = keyCodeString.trim().toUpperCase();
+        if (key.length() == 1) {
+            return KeyEvent.getExtendedKeyCodeForChar(key.charAt(0));
+        } else {
+            return switch (key) {
+                case "LEFT" -> KeyEvent.VK_LEFT;
+                case "RIGHT" -> KeyEvent.VK_RIGHT;
+                case "UP" -> KeyEvent.VK_UP;
+                case "DOWN" -> KeyEvent.VK_DOWN;
+                case "SPACE" -> KeyEvent.VK_SPACE;
+                case "ENTER" -> KeyEvent.VK_ENTER;
+                case "ESCAPE" -> KeyEvent.VK_ESCAPE;
+                default -> throw new IllegalArgumentException("Unsupported key: " + key);
+            };
+        }
     }
 }
