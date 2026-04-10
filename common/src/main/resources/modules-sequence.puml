@@ -1,0 +1,61 @@
+@startuml
+' Sequence diagramme inter-modules (PlantUML recent syntax)
+!pragma teoz true
+autonumber
+
+hide footbox
+
+title Echanges main <-> controller <-> view <-> model
+
+actor "main" as main
+control "controller" as controller
+boundary "view" as view
+entity "model" as model
+
+== Initialisation ==
+autonumber 1
+main -> controller : setModel(model: IModel)
+main -> controller : setView(view: IView)
+main -> view : setController(controller: IController)
+main -> view : setModel(model: IModel)
+view -> model : setOnChange(display: Runnable)
+main -> controller : proceed()
+
+== Boucle de jeu ==
+autonumber 7
+loop toutes les 50 ms
+    autonumber 7.1
+    controller -> model : playTurn()
+
+    opt si l'etat change
+        autonumber 7.1.1
+        model -> view : display()
+        view -> model : getState(): GameState
+        model --> view : gameState: GameState
+    end
+
+    autonumber 7.2
+    controller -> view : handleActiveGameIntent()
+
+    opt intention detectee
+        autonumber 7.2.1
+        view -> model : getPlayers(): List<Player>
+        model --> view : players: List<Player>
+        view -> controller : handleGameIntent(player: Player, gameIntent: GameIntent)
+
+        autonumber 7.2.3
+        alt gameIntent == TURN_LEFT
+            autonumber 7.2.3.1
+            controller -> model : turnLeft(player: Player)
+        else gameIntent == TURN_RIGHT
+            autonumber 7.2.3.2
+            controller -> model : turnRight(player: Player)
+        end
+    end
+
+    autonumber 7.3
+    controller -> controller : sleep(50 ms)
+end
+
+@enduml
+

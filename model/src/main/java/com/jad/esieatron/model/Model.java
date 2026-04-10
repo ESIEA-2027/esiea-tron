@@ -23,9 +23,14 @@ public class Model implements IModel {
         this.grid = new Grid(Model.GRID_DIMENSION);
         this.lightCycles = new LightCycles(this.grid::normalize, this.grid::tryPlaceWallAt);
         this.players.add(new Player(1, new Sprite('#')));
+        this.players.add(new Player(2, new Sprite('@')));
         this.lightCycles.add(new LightCycle(this.players.getFirst(),
                                             new Point(10, 10),
                                             CardinalPoint.EAST));
+
+        this.lightCycles.add(new LightCycle(this.players.get(1),
+                                            new Point(40, 190),
+                                            CardinalPoint.WEST));
     }
 
     @Override

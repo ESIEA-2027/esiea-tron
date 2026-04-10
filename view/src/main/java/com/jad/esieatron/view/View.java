@@ -28,6 +28,8 @@ public class View implements IView {
         settings.setScreenDimension(gridDimension);
         settings.addKeyboardListener(KeyEvent.VK_Q, "1-turn-left");
         settings.addKeyboardListener(KeyEvent.VK_D, "1-turn-right");
+        settings.addKeyboardListener(KeyEvent.VK_LEFT, "2-turn-left");
+        settings.addKeyboardListener(KeyEvent.VK_RIGHT, "2-turn-right");
         this.window = new TextWindow(settings);
         this.window.setVisible(true);
     }
@@ -46,6 +48,7 @@ public class View implements IView {
                                              GameIntent.TURN_LEFT);
         }
         this.previousKeyStates.put("1-turn-left", isPressed);
+
         isPressed = this.window.isOn("1-turn-right");
         previousState = this.previousKeyStates.getOrDefault("1-turn-right", false);
         if (isPressed && !previousState) {
@@ -53,6 +56,22 @@ public class View implements IView {
                                              GameIntent.TURN_RIGHT);
         }
         this.previousKeyStates.put("1-turn-right", isPressed);
+
+        isPressed = this.window.isOn("2-turn-right");
+        previousState = this.previousKeyStates.getOrDefault("2-turn-right", false);
+        if (isPressed && !previousState) {
+            this.controller.handleGameIntent(this.model.getPlayers().get(1),
+                                             GameIntent.TURN_RIGHT);
+        }
+        this.previousKeyStates.put("2-turn-right", isPressed);
+
+        isPressed = this.window.isOn("2-turn-right");
+        previousState = this.previousKeyStates.getOrDefault("2-turn-right", false);
+        if (isPressed && !previousState) {
+            this.controller.handleGameIntent(this.model.getPlayers().get(1),
+                                             GameIntent.TURN_RIGHT);
+        }
+        this.previousKeyStates.put("2-turn-right", isPressed);
     }
 
     public void display() {
