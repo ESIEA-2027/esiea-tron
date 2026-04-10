@@ -4,6 +4,7 @@ import com.jad.esieatron.domain.Player;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 
@@ -23,17 +24,25 @@ class LightCycles extends ArrayList<LightCycle> {
         }
     }
 
-    public void turnLeft(final Player player) {
+    void turnLeft(final Player player) {
         this.stream()
                 .filter(lightCycle -> lightCycle.getPlayer() == player)
                 .findFirst()
                 .ifPresent(LightCycle::turnLeft);
     }
 
-    public void turnRight(final Player player) {
+    void turnRight(final Player player) {
         this.stream()
                 .filter(lightCycle -> lightCycle.getPlayer() == player)
                 .findFirst()
                 .ifPresent(LightCycle::turnRight);
+    }
+
+    List<PlayerState> getStates() {
+        final ArrayList<PlayerState> states = new ArrayList<>();
+        for (LightCycle lightCycle : this) {
+            states.add(lightCycle.getState());
+        }
+        return states;
     }
 }

@@ -52,4 +52,8 @@ class LightCycle {
     void crash() {
         this.alive = false;
     }
+
+    public PlayerState getState() {
+        return new PlayerState(this.player, this.position, this.direction);
+    }
 }

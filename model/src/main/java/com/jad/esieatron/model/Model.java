@@ -50,7 +50,10 @@ public class Model implements IModel {
 
     @Override
     public GameState getState() {
-        return new GameState(this.gridDimension, this.grid.getSprites());
+        return new GameState(this.gridDimension,
+                             this.grid.getSprites(),
+                             this.lightCycles.getStates()
+        );
     }
 
     @Override
