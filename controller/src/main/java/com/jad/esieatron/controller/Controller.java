@@ -3,27 +3,24 @@ package com.jad.esieatron.controller;
 import com.jad.esieatron.domain.GameIntent;
 import com.jad.esieatron.domain.Player;
 import com.jad.esieatron.model.IModel;
-import com.jad.esieatron.view.IView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller implements IController {
+    private final List<HandleActiveGameIntent> handleActiveGameIntents = new ArrayList<>();
     private IModel model;
-    private IView view;
 
     @Override
-    public void setView(final IView view) {
-        this.view = view;
-    }
-
-    @Override
-    public void setModel(final IModel model) {
-        this.model = model;
+    public void addHandleActiveGameIntents(final HandleActiveGameIntent handleActiveGameIntent) {
+        this.handleActiveGameIntents.add(handleActiveGameIntent);
     }
 
     @Override
     public void proceed() {
         for (; ; ) {
             this.model.playTurn();
-            this.view.handleActiveGameIntent();
+            this.handleActiveGameIntents.forEach(HandleActiveGameIntent::handleActiveGameIntent);
             try {
                 Thread.sleep(50);
             } catch (InterruptedException exception) {
@@ -38,5 +35,10 @@ public class Controller implements IController {
             case TURN_LEFT -> this.model.turnLeft(player);
             case TURN_RIGHT -> this.model.turnRight(player);
         }
+    }
+
+    @Override
+    public void setModel(final IModel model) {
+        this.model = model;
     }
 }

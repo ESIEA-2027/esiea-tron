@@ -2,6 +2,7 @@ package com.jad.esieatron.view;
 
 import com.jad.esieatron.domain.GameIntent;
 import com.jad.esieatron.domain.Player;
+import com.jad.esieatron.domain.PlayerType;
 import com.jad.esieatron.model.GameState;
 import com.jad.esieatron.utils.EsieaTronUtils;
 import com.jad.textwindow.TextWindowSettings;
@@ -12,9 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class View extends AbstractView {
+public class ViewHuman extends AbstractView {
     private static final String VIEW_PROPERTIES = "view-human.properties";
     private final Map<String, Boolean> previousKeyStates = new HashMap<>();
+
+    public ViewHuman() {
+        super(true);
+    }
 
     @Override
     public void render(final GameState gameState) {
@@ -30,13 +35,16 @@ public class View extends AbstractView {
 
     @Override
     protected void initializeWindowExtended(final TextWindowSettings settings) {
-        final Properties properties = EsieaTronUtils.loadProperties(this.getClass(), View.VIEW_PROPERTIES);
+        final Properties properties = EsieaTronUtils.loadProperties(this.getClass(), ViewHuman.VIEW_PROPERTIES);
         List<Player> players = this.getModel().getPlayers();
         for (Player player : players) {
-            for (GameIntent intent : GameIntent.values()) {
-                settings.addKeyboardListener(
-                        View.parseKeyCode(properties.getProperty("keyBinding." + player.id() + "." + intent.getName())),
-                        player.id() + "-" + intent.getName());
+            if (player.playerType() == PlayerType.HUMAN) {
+                for (GameIntent intent : GameIntent.values()) {
+                    settings.addKeyboardListener(
+                            ViewHuman.parseKeyCode(
+                                    properties.getProperty("keyBinding." + player.id() + "." + intent.getName())),
+                            player.id() + "-" + intent.getName());
+                }
             }
         }
     }
@@ -63,12 +71,14 @@ public class View extends AbstractView {
     public void handleActiveGameIntent() {
         final List<Player> players = this.getModel().getPlayers();
         for (Player player : players) {
-            for (GameIntent gameIntent : GameIntent.values()) {
-                final String intent = player.id() + "-" + gameIntent.getName();
-                final boolean isPressed = this.getWindow().isOn(intent);
-                final boolean previousState = this.previousKeyStates.getOrDefault(intent, false);
-                if (isPressed && !previousState) this.getController().handleGameIntent(player, gameIntent);
-                this.previousKeyStates.put(intent, isPressed);
+            if (player.playerType() == PlayerType.HUMAN) {
+                for (GameIntent gameIntent : GameIntent.values()) {
+                    final String intent = player.id() + "-" + gameIntent.getName();
+                    final boolean isPressed = this.getWindow().isOn(intent);
+                    final boolean previousState = this.previousKeyStates.getOrDefault(intent, false);
+                    if (isPressed && !previousState) this.getController().handleGameIntent(player, gameIntent);
+                    this.previousKeyStates.put(intent, isPressed);
+                }
             }
         }
     }

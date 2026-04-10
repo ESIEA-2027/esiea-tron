@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 final class Tile {
-    public static final Tile EMPTY = new Tile(new Player(0, new Sprite(' ')));
+    public static final Tile EMPTY = new Tile(new Player(0, new Sprite(' '), null));
 
     private static final List<Tile> tiles = new ArrayList<>();
     private final Player player;

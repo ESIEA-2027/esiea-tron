@@ -12,11 +12,11 @@ public interface IModel {
 
     GameState getState();
 
-    void playTurn();
-
-    void setOnChange(Runnable onChange);
+    void addOnChange(Runnable onChange);
 
     void turnLeft(Player player);
 
     void turnRight(Player player);
+
+    void playTurn();
 }

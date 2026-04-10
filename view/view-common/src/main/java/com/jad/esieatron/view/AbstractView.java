@@ -7,9 +7,14 @@ import com.jad.textwindow.TextWindow;
 import com.jad.textwindow.TextWindowSettings;
 
 abstract class AbstractView implements IView {
+    private final boolean activeWindow;
     private TextWindow window;
     private IModel model;
     private IController controller;
+
+    protected AbstractView(final boolean activeWindow) {
+        this.activeWindow = activeWindow;
+    }
 
     protected final TextWindow getWindow() {
         return this.window;
@@ -22,8 +27,8 @@ abstract class AbstractView implements IView {
     @Override
     public final void setModel(final IModel model) {
         this.model = model;
-        this.model.setOnChange(this::onModelChanged);
-        this.initializeWindow();
+        this.model.addOnChange(this::onModelChanged);
+        if (this.activeWindow) this.initializeWindow();
     }
 
     public void onModelChanged() {
@@ -52,6 +57,7 @@ abstract class AbstractView implements IView {
     @Override
     public final void setController(final IController controller) {
         this.controller = controller;
+        this.controller.addHandleActiveGameIntents(this);
     }
 
     @Override
